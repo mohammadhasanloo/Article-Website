@@ -11,4 +11,5 @@ urlpatterns = [
     path('articles/', include('articles.urls')),
 ]
 
+
 urlpatterns += staticfiles_urlpatterns()

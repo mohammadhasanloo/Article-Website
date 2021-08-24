@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, HttpResponse
 from .import models
 
 def articles_list(request):
@@ -6,3 +6,7 @@ def articles_list(request):
 
     args = {'articles':articles}
     return render(request, 'articles/articleslist.html', args)
+
+
+def article_detail(request, slug):
+    return HttpResponse(slug)

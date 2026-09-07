@@ -1,15 +1,11 @@
-
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import include, path
+
 from . import views
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('about/', views.About),
-    path('', views.Home),
-    path('articles/', include('articles.urls')),
+    path("", views.home, name="home"),
+    path("about/", views.about, name="about"),
+    path("articles/", include("articles.urls")),
+    path("admin/", admin.site.urls),
 ]
-
-
-urlpatterns += staticfiles_urlpatterns()

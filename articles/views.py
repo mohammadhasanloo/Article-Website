@@ -1,12 +1,37 @@
-from django.shortcuts import render, HttpResponse
-from .import models
+from django.core.paginator import Paginator
+from django.db.models import Q
+from django.shortcuts import get_object_or_404, render
+
+from .models import Article
+
+PER_PAGE = 5
+
 
 def articles_list(request):
-    articles = models.Article.objects.all().order_by('date')
+    """Every article, newest first, five to a page, filtered by ?q= if given."""
+    articles = Article.objects.select_related("author")
 
-    args = {'articles':articles}
-    return render(request, 'articles/articleslist.html', args)
+    query = request.GET.get("q", "").strip()
+    if query:
+        articles = articles.filter(Q(title__icontains=query) | Q(body__icontains=query))
+
+    page = Paginator(articles, PER_PAGE).get_page(request.GET.get("page"))
+    return render(
+        request,
+        "articles/list.html",
+        {"page": page, "query": query, "total": articles.count()},
+    )
 
 
 def article_detail(request, slug):
-    return HttpResponse(slug)
+    """One article, with links to the ones either side of it in time."""
+    article = get_object_or_404(Article.objects.select_related("author"), slug=slug)
+    return render(
+        request,
+        "articles/detail.html",
+        {
+            "article": article,
+            "newer": Article.objects.filter(published__gt=article.published).last(),
+            "older": Article.objects.filter(published__lt=article.published).first(),
+        },
+    )

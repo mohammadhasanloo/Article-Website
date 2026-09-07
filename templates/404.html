@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block title %}Not found &middot; Notes{% endblock %}
+
+{% block content %}
+  <article class="prose">
+    <h1>Not found</h1>
+    <p>There is no article at that address.
+       <a href="{% url 'articles:list' %}">The index</a> lists everything there is.</p>
+  </article>
+{% endblock %}

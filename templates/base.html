@@ -1,0 +1,26 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Notes{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+<body>
+  <header class="masthead">
+    <a class="wordmark" href="{% url 'home' %}">Notes</a>
+    <nav>
+      <a href="{% url 'articles:list' %}">Articles</a>
+      <a href="{% url 'about' %}">About</a>
+    </nav>
+  </header>
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer>
+    <p>Built with Django.</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ article.title }} &middot; Notes{% endblock %}
+
+{% block content %}
+  <article class="prose">
+    <h1>{{ article.title }}</h1>
+    <p class="meta"><span class="item">{{ article.published|date:"j F Y" }}</span><span class="item">{{ article.reading_time }} min read</span>{% if article.author %}<span class="item author">{{ article.author.get_full_name|default:article.author.username }}</span>{% endif %}</p>
+
+    {{ article.body|linebreaks }}
+  </article>
+
+  <nav class="pagination">
+    {% if newer %}
+      <a href="{{ newer.get_absolute_url }}">&larr; {{ newer.title }}</a>
+    {% else %}<span></span>{% endif %}
+    {% if older %}
+      <a href="{{ older.get_absolute_url }}">{{ older.title }} &rarr;</a>
+    {% else %}<span></span>{% endif %}
+  </nav>
+{% endblock %}

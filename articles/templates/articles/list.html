@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Articles &middot; Notes{% endblock %}
+
+{% block content %}
+  <h1>Articles</h1>
+
+  <form class="search" method="get" action="{% url 'articles:list' %}">
+    <input type="search" name="q" value="{{ query }}"
+           placeholder="Search titles and bodies" aria-label="Search articles">
+    <button type="submit">Search</button>
+  </form>
+
+  {% if query %}
+    <p class="meta">{{ total }} article{{ total|pluralize }} matching
+       &ldquo;{{ query }}&rdquo;.
+       <a href="{% url 'articles:list' %}">Clear</a></p>
+  {% endif %}
+
+  <ul class="article-list">
+    {% for article in page %}
+      <li class="article">
+        <h2><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></h2>
+        <p class="meta"><span class="item">{{ article.published|date:"j F Y" }}</span><span class="item">{{ article.reading_time }} min read</span>{% if article.author %}<span class="item author">{{ article.author.get_full_name|default:article.author.username }}</span>{% endif %}</p>
+        <p>{{ article.snippet }}</p>
+      </li>
+    {% empty %}
+      <li class="empty">
+        {% if query %}Nothing matched that search.
+        {% else %}Nothing published yet.
+           Run <code>python manage.py seed</code> to fill the blog with samples.
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+
+  {% if page.has_other_pages %}
+    <nav class="pagination">
+      {% if page.has_previous %}
+        <a href="?{% if query %}q={{ query }}&amp;{% endif %}page={{ page.previous_page_number }}">&larr; Newer</a>
+      {% else %}<span></span>{% endif %}
+
+      <span class="meta">Page {{ page.number }} of {{ page.paginator.num_pages }}</span>
+
+      {% if page.has_next %}
+        <a href="?{% if query %}q={{ query }}&amp;{% endif %}page={{ page.next_page_number }}">Older &rarr;</a>
+      {% else %}<span></span>{% endif %}
+    </nav>
+  {% endif %}
+{% endblock %}

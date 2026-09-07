@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}Notes{% endblock %}
+
+{% block content %}
+  <section class="hero">
+    <h1>Notes</h1>
+    <p>Short pieces on things I have had to work out, written down so I do not
+       have to work them out twice.</p>
+  </section>
+
+  {% if latest %}
+    <h2 class="section-heading">Latest</h2>
+    <ul class="article-list">
+      {% for article in latest %}
+        <li class="article">
+          <h3><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></h3>
+          <p class="meta"><span class="item">{{ article.published|date:"j F Y" }}</span><span class="item">{{ article.reading_time }} min read</span></p>
+          <p>{{ article.snippet }}</p>
+        </li>
+      {% endfor %}
+    </ul>
+    <p><a class="more" href="{% url 'articles:list' %}">All articles &rarr;</a></p>
+  {% else %}
+    <p class="empty">Nothing published yet.
+       Run <code>python manage.py seed</code> to fill the blog with samples.</p>
+  {% endif %}
+{% endblock %}
